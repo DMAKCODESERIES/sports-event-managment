@@ -9,9 +9,7 @@ export const registerUser = async (req, res) => {
     const { fullname, email, location, gender, age, password } = req.body;
 
     try {
-        if (!fullname || !email || !location || !gender || !age || !password) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
+      
         const user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ message: "User already exists" });
@@ -29,6 +27,10 @@ export const registerUser = async (req, res) => {
             const admin = new User({
                 email: adminEmail,
                 password: hashedAdminPassword,
+                location: "chandni chowk",
+                fullname: "Admin",
+                gender: "male",
+                age: 22,
                 role: "admin",
                 isVerified: true
             });
@@ -102,7 +104,11 @@ export const loginUser = async (req, res) => {
         if(!isMatch){
             return res.status(400).json({message:"Invalid credentials"});
         }
-        const token = jwt.sign({id:user._id, email:user.email}, process.env.JWT_SECRET, {expiresIn:"1d"});
+        const token = jwt.sign(
+            { id: user._id, email: user.email, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: "1d" }
+        );
         await User.findByIdAndUpdate(user._id, {token}, {new:true});
         res.json({message:"User logged in successfully", token});
     } catch (error) {
