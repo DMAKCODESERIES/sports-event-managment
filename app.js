@@ -19,4 +19,5 @@ app.use(cookieParser())
 
 app.use("/user",userroutes)
 app.use("/admin",adminroutes)
+
 export default app

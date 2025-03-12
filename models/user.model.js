@@ -5,25 +5,32 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    email:{
+    email: {
         type: String,
         required: true,
         unique: true
     },
-    location:{
+    location: {
         type: String,
         required: true
     },
-    gender:{
-        enum:["male","female"],
+    image: {type: String},
+    bio: { type: String },
+    sportPreferences: [String],
+    ratings: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rating" }],
+    isPlatinumOrganizer: { type: Boolean, default: false },
+    platinumMembershipExpiry: { type: Date },
+    walletBalance: { type: Number, default: 0 },
+    gender: {
+        enum: ["male", "female"],
         type: String,
         required: true
     },
-    age:{
+    age: {
         type: Number,
         required: true
     },
-    password:{
+    password: {
         type: String,
         required: true
     },
@@ -32,11 +39,11 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        default: "user",
+        default: "visitor",
         required: true,
         lowercase: true,
         trim: true,
-        enum: ["user", "admin"]
+        enum: ["visitor", "organizer", "player", "superadmin"]
     },
     isVerified: {
         type: Boolean,
@@ -49,5 +56,5 @@ const userSchema = new mongoose.Schema({
 
 })
 
-const User = mongoose.model("User" , userSchema)
+const User = mongoose.model("User", userSchema)
 export default User;
